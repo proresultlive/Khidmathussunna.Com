@@ -264,6 +264,33 @@
   /* Contact item slide from left */
   .contact-item.reveal { transform: translateX(-30px); }
 
+
+  /* LIGHTBOX */
+  .lightbox-overlay {
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.92);
+    align-items: center; justify-content: center;
+  }
+  .lightbox-overlay.active { display: flex; }
+  .lightbox-overlay img {
+    max-width: 95vw; max-height: 92vh;
+    object-fit: contain; border-radius: 6px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    animation: zoomIn 0.25s ease;
+  }
+  @keyframes zoomIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+  .lightbox-close {
+    position: fixed; top: 18px; right: 22px;
+    color: #fff; font-size: 36px; cursor: pointer;
+    line-height: 1; z-index: 10000; font-weight: 300;
+    background: none; border: none;
+  }
+  .lightbox-close:hover { color: #aaa; }
+  .gallery-item { cursor: zoom-in; }
+
 </style>
 </head>
 <body>
@@ -587,6 +614,30 @@
   }, { threshold: 0.4 });
 
   document.querySelectorAll('.stat').forEach(s => statObserver.observe(s));
+</script>
+
+
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+  // Lightbox
+  document.querySelectorAll('.gallery-item img').forEach(img => {
+    img.addEventListener('click', () => {
+      document.getElementById('lightbox-img').src = img.src;
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
 </script>
 
 </body>
